@@ -8,13 +8,9 @@ public class Main {
 
         thread.start();
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(" | Wykonywany wątek (runable): " + Thread.currentThread().getName());
-            }
-        };
-        Thread anotherthread = new Thread(runnable, "My-Runnable-1");
+
+        Thread anotherthread = new Thread(
+                () -> System.out.println(" | Wykonywany wątek: " + Thread.currentThread().getName()), "My-Runnable-1");
         anotherthread.start();
 
     }

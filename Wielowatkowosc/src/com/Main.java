@@ -1,16 +1,13 @@
 package com;
 
 import java.sql.Time;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Główny wątek apki: " + Thread.currentThread().getName());
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
         Runnable worker1 = () -> {
             try {
                 System.out.println("Robotnik 1 | Aktualny wątek : " + Thread.currentThread().getName());
@@ -39,9 +36,10 @@ public class Main {
                 e.printStackTrace();
             }
         };
-        executor.submit(worker1);
+       /* executor.submit(worker1);
         executor.submit(worker2);
-        executor.submit(worker3);
+        executor.submit(worker3);*/
+        executor.scheduleAtFixedRate(worker3,2,6,TimeUnit.SECONDS);
         executor.shutdown();
 
 

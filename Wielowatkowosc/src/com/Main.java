@@ -1,5 +1,7 @@
 package com;
 
+import java.util.concurrent.TimeUnit;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -8,9 +10,19 @@ public class Main {
 
         thread.start();
 
-
-        Thread anotherthread = new Thread(
-                () -> System.out.println(" | Wykonywany wątek: " + Thread.currentThread().getName()), "My-Runnable-1");
+        Runnable runnable = () -> {
+            try {
+                System.out.println(" | Wykonywany wątek: " + Thread.currentThread().getName());
+                for (int i = 1; i <= 10; i++) {
+                    System.out.println(i);
+                    //Thread.sleep(1000);
+                    TimeUnit.SECONDS.sleep(1);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+        Thread anotherthread = new Thread(runnable, "My-Runnable-1");
         anotherthread.start();
 
     }

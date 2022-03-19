@@ -1,5 +1,8 @@
 package com;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -9,29 +12,35 @@ public class Main {
        /* Thread thread = new MyThread("My-Thread-1");
 
         thread.start();*/
-
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         Runnable countdown = () -> {
             try {
                 System.out.println(" | Wykonywany wątek (countdown) : " + Thread.currentThread().getName());
                 for (int i = 1; i <= 10; i++) {
                     System.out.println(i);
                     //Thread.sleep(1000);
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(500);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         };
 
+
+
+
         Runnable blastOff = () -> {
             System.out.println(" | Wykonywany wątek (countdown) : " + Thread.currentThread().getName());
             System.out.println("Blast off!");
         };
-        Thread countdownTread = new Thread(countdown, "Countdown");
-        Thread blastOfThread =  new Thread(blastOff, "Blast off!");
+       /* Thread countdownTread = new Thread(countdown, "Countdown");
+        Thread blastOfThread = new Thread(blastOff, "Blast off!");
         countdownTread.start();
         countdownTread.join();
-        blastOfThread.start();
+        blastOfThread.start();*/
+        executor.submit(countdown);
+        executor.submit(blastOff);
+        executor.shutdown();
 
     }
 }

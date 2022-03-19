@@ -3,34 +3,28 @@ package com;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 public class Main {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        Callable<Integer> answerToEverything = () -> {
-            TimeUnit.SECONDS.sleep(12);
+
+        CompletableFuture.runAsync(
+                () -> System.out.println("Wątek : " + Thread.currentThread().getName()), executor
+        );
+       CompletableFuture<Integer> result = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return 42;
-        };
-        Callable<Integer> anotherAnswerToEverything = () -> {
-            TimeUnit.SECONDS.sleep(10);
-            return 48;
-        };
-        Callable<Integer> finalAnswerToEverything = () -> {
-            TimeUnit.SECONDS.sleep(6);
-            return 56;
-        };
 
-        List<Callable<Integer>> callableList = Arrays.asList(answerToEverything, anotherAnswerToEverything, finalAnswerToEverything);
+        },executor);
+        System.out.println(result.get());
 
-        List<Future<Integer>> futures = executor.invokeAll(callableList);
-
-        Integer integer = executor.invokeAny(callableList);
-        System.out.println(integer);
-//        for (Future<Integer> f : futures){
-//            System.out.println(f.get());
-//        }
         executor.shutdown();
 
     }

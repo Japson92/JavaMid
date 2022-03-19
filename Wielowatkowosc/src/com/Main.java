@@ -12,8 +12,18 @@ public class Main {
             return 42;
         };
         Future<Integer> result = executor.submit(answerToEverything);
-        Integer r = result.get();
-        System.out.println(r);
+
+//        while (!result.isDone()){
+//            System.out.println("Brak wyniku !");
+//            TimeUnit.SECONDS.sleep(2);
+//        }
+        Integer r = null;
+        try {
+            r = result.get(4, TimeUnit.SECONDS);
+            System.out.println(r);
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
         executor.shutdown();
 
     }

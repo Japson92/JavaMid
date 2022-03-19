@@ -14,7 +14,7 @@ public class Main {
         CompletableFuture.runAsync(
                 () -> System.out.println("Wątek : " + Thread.currentThread().getName()), executor
         );
-       CompletableFuture<Integer> result = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.supplyAsync(() -> {
             try {
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
@@ -22,8 +22,17 @@ public class Main {
             }
             return 42;
 
-        },executor);
-        System.out.println(result.get());
+        }, executor).thenApply(r -> {
+            System.out.println(" *2 : " + Thread.currentThread().getName());
+            return r * 2;
+        }).thenApply(r -> {
+            System.out.println(" +1 : " + Thread.currentThread().getName());
+            return r + 1;
+        }).thenAccept(r -> {
+            System.out.println("sout " + Thread.currentThread().getName());
+            System.out.println(r);
+        });
+
 
         executor.shutdown();
 
